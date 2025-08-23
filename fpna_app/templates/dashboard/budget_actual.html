@@ -1,0 +1,250 @@
+{% extends 'dashboard/base.html' %}
+{% load accounting_filters %}
+
+{% block title %}Budget vs. Actual{% endblock %}
+{% block page_title %}Budget vs. Actual{% endblock %}
+
+{% block content %}
+<div x-data="{ expanded: true }">
+        <!-- Action Buttons -->
+        <div class="flex justify-between mb-6">
+          <button class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded-md flex items-center">
+            <i class="fas fa-sync-alt mr-2"></i>
+            Refresh Data
+          </button>
+          <div class="flex space-x-2">
+            <button @click="expanded = !expanded" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-md flex items-center transition-colors">
+              <i :class="expanded ? 'fas fa-compress-arrows-alt mr-2' : 'fas fa-expand-arrows-alt mr-2'" class="transition-transform"></i>
+              <span x-text="expanded ? 'Collapse' : 'Expand'">Collapse</span>
+            </button>
+            <button class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded-md flex items-center">
+              <i class="fas fa-bug mr-2"></i>
+              Show/Hide Debug Info
+            </button>
+          </div>
+        </div>
+        
+        <!-- Data Table -->
+        <div class="bg-white border border-gray-300">
+          <table class="w-full table-fixed border-collapse excel-table">
+            <colgroup>
+              <col style="width: 25%">
+              <col style="width: 12.5%">
+              <col style="width: 12.5%">
+              <col style="width: 12.5%">
+              <col style="width: 12.5%">
+              <col style="width: 12.5%">
+              <col style="width: 12.5%">
+            </colgroup>
+            <thead class="bg-gray-100 border-b border-gray-300 sticky top-0 z-10">
+              <tr>
+                <th class="text-left py-2 px-3 font-semibold text-gray-800 text-sm border-r border-gray-300 bg-gray-100">Description</th>
+                <th class="text-right py-2 px-3 font-semibold text-gray-800 text-sm border-r border-gray-300 bg-gray-100">Q1 2025 Actual</th>
+                <th class="text-right py-2 px-3 font-semibold text-gray-800 text-sm border-r border-gray-300 bg-gray-100">Q2 2025 Actual</th>
+                <th class="text-right py-2 px-3 font-semibold text-gray-800 text-sm border-r border-gray-300 bg-gray-100">Q2 2025 Budget</th>
+                <th class="text-right py-2 px-3 font-semibold text-gray-800 text-sm border-r border-gray-300 bg-gray-100">Q2 2025 Average</th>
+                <th class="text-right py-2 px-3 font-semibold text-gray-800 text-sm border-r border-gray-300 bg-gray-100">Q2 2025 Var B/(W)</th>
+                <th class="text-right py-2 px-3 font-semibold text-gray-800 text-sm bg-gray-100">Q3 Budget</th>
+              </tr>
+            </thead>
+            <tbody id="financial-data">
+              {% for item in financial_data %}
+              {% if item.name == 'Net Sales' %}
+              <tr class="hover:bg-gray-50 border-b border-gray-300 bg-green-50">
+                <td class="py-1 px-3 font-bold text-gray-900 text-sm border-r border-gray-300">{{ item.name }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q1_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_budget|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_average|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.variance|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm">{{ item.q3_budget|accounting_format }}</td>
+              </tr>
+              {% elif item.name == 'Operating Profit/(Loss)' %}
+              <tr class="hover:bg-gray-50 border-b border-gray-300 bg-yellow-50">
+                <td class="py-1 px-3 font-bold text-gray-900 text-sm border-r border-gray-300">{{ item.name }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q1_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_budget|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_average|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.variance|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm">{{ item.q3_budget|accounting_format }}</td>
+              </tr>
+              {% elif item.name == 'Net Income/(Loss)' %}
+              <tr class="hover:bg-gray-50 border-b border-gray-300 bg-green-100">
+                <td class="py-1 px-3 font-bold text-gray-900 text-sm border-r border-gray-300">{{ item.name }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q1_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_budget|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.q2_average|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm border-r border-gray-300">{{ item.variance|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-bold text-sm">{{ item.q3_budget|accounting_format }}</td>
+              </tr>
+              {% elif 'Contribution' in item.name %}
+              <tr class="hover:bg-gray-50 border-b border-gray-300 bg-green-50">
+                <td class="py-1 px-3 font-semibold text-gray-900 text-sm border-r border-gray-300">{{ item.name }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q1_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q2_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q2_budget|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q2_average|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.variance|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm">{{ item.q3_budget|accounting_format }}</td>
+              </tr>
+              {% elif item.type == 'metric' %}
+              <tr class="hover:bg-gray-50 border-b border-gray-300 bg-blue-50">
+                <td class="py-1 px-3 font-semibold text-gray-900 text-sm border-r border-gray-300">{{ item.name }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q1_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q2_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q2_budget|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.q2_average|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm border-r border-gray-300">{{ item.variance|accounting_format }}</td>
+                <td class="text-right py-1 px-3 font-semibold text-sm">{{ item.q3_budget|accounting_format }}</td>
+              </tr>
+              {% elif item.type == 'percentage' %}
+              <tr class="hover:bg-gray-50 border-b border-gray-300 even:bg-gray-50 odd:bg-white">
+                <td class="py-1 px-3 text-gray-700 italic text-sm border-r border-gray-300">{{ item.name }}</td>
+                <td class="text-right py-1 px-3 italic text-sm border-r border-gray-300">{{ item.q1_actual|percentage_format }}</td>
+                <td class="text-right py-1 px-3 italic text-sm border-r border-gray-300">{{ item.q2_actual|percentage_format }}</td>
+                <td class="text-right py-1 px-3 italic text-sm border-r border-gray-300">{{ item.q2_budget|percentage_format }}</td>
+                <td class="text-right py-1 px-3 italic text-sm border-r border-gray-300">{{ item.q2_average|percentage_format }}</td>
+                <td class="text-right py-1 px-3 italic text-sm border-r border-gray-300">{{ item.variance|percentage_format }}</td>
+                <td class="text-right py-1 px-3 italic text-sm">{{ item.q3_budget|percentage_format }}</td>
+              </tr>
+              {% else %}
+              <tr class="hover:bg-gray-50 border-b border-gray-300 even:bg-gray-50 odd:bg-white account-row" 
+                  x-show="expanded" 
+                  x-transition:enter="transition ease-out duration-300" 
+                  x-transition:enter-start="opacity-0 transform scale-y-0" 
+                  x-transition:enter-end="opacity-100 transform scale-y-100" 
+                  x-transition:leave="transition ease-in duration-200" 
+                  x-transition:leave-start="opacity-100 transform scale-y-100" 
+                  x-transition:leave-end="opacity-0 transform scale-y-0" 
+                  style="transform-origin: top;">
+                <td class="py-1 px-3 text-gray-700 text-sm border-r border-gray-300">{{ item.name }}</td>
+                <td class="text-right py-1 px-3 text-sm border-r border-gray-300">{{ item.q1_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 text-sm border-r border-gray-300">{{ item.q2_actual|accounting_format }}</td>
+                <td class="text-right py-1 px-3 text-sm border-r border-gray-300">{{ item.q2_budget|accounting_format }}</td>
+                <td class="text-right py-1 px-3 text-sm border-r border-gray-300">{{ item.q2_average|accounting_format }}</td>
+                <td class="text-right py-1 px-3 text-sm border-r border-gray-300">{{ item.variance|accounting_format }}</td>
+                <td class="text-right py-1 px-3 text-sm">{{ item.q3_budget|accounting_format }}</td>
+              </tr>
+              {% endif %}
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+</div>
+
+{% endblock %}
+
+{% block extra_styles %}
+<style>
+  /* Excel-like table styling */
+  .excel-table {
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    font-size: 11px;
+    line-height: 1.2;
+  }
+  
+  .excel-table td,
+  .excel-table th {
+    white-space: nowrap;
+    vertical-align: middle;
+  }
+  
+  .excel-table tbody tr:hover {
+    background-color: #e6f3ff !important;
+  }
+  
+  /* Zebra striping for better readability */
+  .excel-table tbody tr:nth-child(even) {
+    background-color: #fafafa;
+  }
+  
+  /* Tighter borders */
+  .excel-table {
+    border: 1px solid #d1d5db;
+  }
+  
+  .excel-table th,
+  .excel-table td {
+    border-right: 1px solid #e5e7eb;
+    border-bottom: 1px solid #e5e7eb;
+  }
+  
+  .excel-table th:last-child,
+  .excel-table td:last-child {
+    border-right: none;
+  }
+  
+  /* Smooth animations for account rows */
+  .account-row {
+    transition: all 0.3s ease;
+  }
+  
+  /* Fix for Alpine.js table row animations */
+  [x-cloak] {
+    display: none !important;
+  }
+  
+  /* Smooth transition for content area padding changes */
+  .flex-1.p-6.overflow-y-auto {
+    transition: padding-top 0.2s ease-out;
+  }
+</style>
+{% endblock %}
+
+{% block extra_scripts %}
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const tableHeader = document.querySelector('thead');
+    const contentArea = document.querySelector('.flex-1.p-6.overflow-y-auto');
+    
+    console.log('Table header:', tableHeader);
+    console.log('Content area:', contentArea);
+    
+    // Create a sentinel element to detect when header should become sticky
+    const sentinel = document.createElement('div');
+    sentinel.style.height = '1px';
+    sentinel.style.marginTop = '-1px';
+    
+    // Insert sentinel right before the table
+    const table = document.querySelector('table');
+    if (table) {
+        table.parentNode.insertBefore(sentinel, table);
+    }
+    
+    // Observe the sentinel instead of the header
+    const observer = new IntersectionObserver(
+        function(entries) {
+            entries.forEach(entry => {
+                console.log('Sentinel intersecting:', entry.isIntersecting);
+                if (entry.isIntersecting) {
+                    // Sentinel visible - header is not sticky
+                    console.log('Header not sticky - restoring padding');
+                    if (contentArea) {
+                        contentArea.style.paddingTop = '1.5rem';
+                    }
+                } else {
+                    // Sentinel not visible - header is sticky
+                    console.log('Header is sticky - removing padding');
+                    if (contentArea) {
+                        contentArea.style.paddingTop = '0';
+                    }
+                }
+            });
+        },
+        {
+            root: null,
+            rootMargin: '0px',
+            threshold: 0
+        }
+    );
+    
+    // Observe the sentinel
+    if (sentinel) {
+        observer.observe(sentinel);
+        console.log('Observer attached to sentinel');
+    }
+});
+</script>
+{% endblock %}

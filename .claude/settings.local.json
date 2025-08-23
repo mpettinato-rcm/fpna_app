@@ -1,0 +1,21 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(python manage.py:*)",
+      "Bash(copy:*)",
+      "Bash(cp:*)",
+      "WebFetch(domain:www.google.com)",
+      "Bash(python test:*)",
+      "Bash(rm:*)",
+      "Bash(timeout 5 python manage.py runserver:*)",
+      "Bash(python:*)",
+      "Bash(find:*)",
+      "Bash(true)",
+      "Bash(taskkill:*)",
+      "Bash(move:*)",
+      "Bash(mv:*)"
+    ],
+    "deny": [],
+    "ask": []
+  }
+}

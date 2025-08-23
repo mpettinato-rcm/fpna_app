@@ -1,0 +1,16 @@
+<table class="min-w-full border-collapse border border-gray-300 bg-white shadow-md rounded-lg mt-6">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="border p-2">Account</th>
+      <th class="border p-2">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for account in accounts %}
+    <tr>
+      <td class="border p-2">{{ account.account_name }}</td>
+      <td class="border p-2 text-right">{{ account.value|floatformat:0 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

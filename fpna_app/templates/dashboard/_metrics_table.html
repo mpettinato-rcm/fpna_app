@@ -1,0 +1,16 @@
+<table class="min-w-full border-collapse border border-gray-300 bg-white shadow-md rounded-lg">
+  <thead class="bg-gray-100">
+    <tr>
+      <th class="border p-2">Description</th>
+      <th class="border p-2">Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for metric in metrics %}
+    <tr>
+      <td class="border p-2 font-semibold">{{ metric.description }}</td>
+      <td class="border p-2 text-right">{{ metric.value|floatformat:0 }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>

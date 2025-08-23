@@ -1,0 +1,120 @@
+{% extends 'dashboard/base.html' %}
+
+{% block title %}Dashboard{% endblock %}
+{% block page_title %}Financial Dashboard{% endblock %}
+
+{% block content %}
+<div class="space-y-6">
+    <!-- Welcome Section -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-4">Welcome to the Financial Dashboard</h2>
+        <p class="text-gray-600 mb-4">Monitor your financial performance with real-time budget vs. actual reporting and key metrics.</p>
+    </div>
+
+    <!-- Key Metrics Cards -->
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-blue-100 rounded-lg">
+                    <i class="fas fa-dollar-sign text-blue-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Revenue</p>
+                    <p class="text-2xl font-semibold text-gray-900">$0</p>
+                    <p class="text-sm text-green-600">vs Budget</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-red-100 rounded-lg">
+                    <i class="fas fa-receipt text-red-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Total Expenses</p>
+                    <p class="text-2xl font-semibold text-gray-900">$0</p>
+                    <p class="text-sm text-red-600">vs Budget</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-green-100 rounded-lg">
+                    <i class="fas fa-chart-line text-green-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Net Income</p>
+                    <p class="text-2xl font-semibold text-gray-900">$0</p>
+                    <p class="text-sm text-green-600">vs Budget</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-lg shadow p-6">
+            <div class="flex items-center">
+                <div class="p-2 bg-yellow-100 rounded-lg">
+                    <i class="fas fa-percentage text-yellow-600"></i>
+                </div>
+                <div class="ml-4">
+                    <p class="text-sm font-medium text-gray-600">Budget Variance</p>
+                    <p class="text-2xl font-semibold text-gray-900">0%</p>
+                    <p class="text-sm text-gray-600">Overall</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">Quick Actions</h3>
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <a href="{% url 'budget_vs_actual' %}" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors">
+                <div class="p-2 bg-blue-100 rounded-lg mr-4">
+                    <i class="fas fa-chart-bar text-blue-600"></i>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-900">Budget vs. Actual</h4>
+                    <p class="text-sm text-gray-600">View detailed variance analysis</p>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors opacity-50 cursor-not-allowed">
+                <div class="p-2 bg-green-100 rounded-lg mr-4">
+                    <i class="fas fa-chart-pie text-green-600"></i>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-900">Metric Analysis</h4>
+                    <p class="text-sm text-gray-600">Analyze key performance metrics</p>
+                </div>
+            </a>
+
+            <a href="#" class="flex items-center p-4 border border-gray-200 rounded-lg hover:bg-gray-50 transition-colors opacity-50 cursor-not-allowed">
+                <div class="p-2 bg-purple-100 rounded-lg mr-4">
+                    <i class="fas fa-file-alt text-purple-600"></i>
+                </div>
+                <div>
+                    <h4 class="font-medium text-gray-900">Generate Reports</h4>
+                    <p class="text-sm text-gray-600">Create custom financial reports</p>
+                </div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity Placeholder -->
+    <div class="bg-white rounded-lg shadow p-6">
+        <h3 class="text-lg font-semibold mb-4">Recent Activity</h3>
+        <div class="space-y-3">
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                <i class="fas fa-info-circle text-blue-500 mr-3"></i>
+                <span class="text-gray-700">Dashboard ready for financial data analysis</span>
+            </div>
+            <div class="flex items-center p-3 bg-gray-50 rounded-lg">
+                <i class="fas fa-database text-green-500 mr-3"></i>
+                <span class="text-gray-700">Connected to {{ selected_company }} database</span>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
