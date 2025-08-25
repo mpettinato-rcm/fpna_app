@@ -1,0 +1,23 @@
+# Python cache
+__pycache__/
+*.py[cod]
+*.pyo
+
+# Virtual environment
+.venv/
+
+# Django collected static
+/staticfiles/
+
+# SQLite database (if you ever use it locally)
+db.sqlite3
+
+# Local config
+.env
+
+# VS Code
+.vscode/
+
+# macOS / Windows trash
+.DS_Store
+Thumbs.db

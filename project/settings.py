@@ -35,8 +35,11 @@ INSTALLED_APPS = [
 # --- Middleware (WhiteNoise directly after SecurityMiddleware in prod) ---
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
-    # WhiteNoise should be here in production for static files
-    "whitenoise.middleware.WhiteNoiseMiddleware",
+    # Use WhiteNoise only when DEBUG is False (prod)
+    *(
+        ["whitenoise.middleware.WhiteNoiseMiddleware"]
+        if not DEBUG else []
+    ),
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
