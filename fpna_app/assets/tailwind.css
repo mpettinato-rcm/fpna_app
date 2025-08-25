@@ -1,0 +1,5 @@
+@import "tailwindcss";
+
+/* scan Django templates + any class strings you build in Python */
+@source "../../templates/**/*.html";
+@source "../../**/*.py";

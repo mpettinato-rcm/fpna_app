@@ -99,11 +99,6 @@ STATIC_URL = "/static/"
 # Required for collectstatic on Render
 STATIC_ROOT = BASE_DIR / "staticfiles"
 
-# Keep your app static folder for local dev too
-STATICFILES_DIRS = [
-    BASE_DIR / "fpna_app" / "static",
-]
-
 # Django 5.x storage settings (WhiteNoise)
 STORAGES = {
     "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
