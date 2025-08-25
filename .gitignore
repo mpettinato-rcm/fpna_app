@@ -21,3 +21,5 @@ db.sqlite3
 # macOS / Windows trash
 .DS_Store
 Thumbs.db
+
+*.exe
