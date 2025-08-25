@@ -1,12 +1,27 @@
+# project/settings.py
 import os
 from pathlib import Path
+import dj_database_url
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = "replace-this-secret-key"
-DEBUG = True
-ALLOWED_HOSTS = []
+# --- Core env toggles ---
+DEBUG = os.getenv("DEBUG", "False").lower() == "true"
+# In dev (DEBUG=True), we allow a placeholder; in prod require SECRET_KEY
+SECRET_KEY = os.getenv("SECRET_KEY", "dev-insecure" if DEBUG else "")
 
+# --- Hosts / CSRF for Render ---
+RENDER_EXTERNAL_HOSTNAME = os.getenv("RENDER_EXTERNAL_HOSTNAME")
+ALLOWED_HOSTS = ["localhost", "127.0.0.1"]
+if RENDER_EXTERNAL_HOSTNAME:
+    ALLOWED_HOSTS.append(RENDER_EXTERNAL_HOSTNAME)
+
+# Django 4/5 requires this for HTTPS form posts (admin/login, etc.)
+CSRF_TRUSTED_ORIGINS = []
+if RENDER_EXTERNAL_HOSTNAME:
+    CSRF_TRUSTED_ORIGINS = [f"https://{RENDER_EXTERNAL_HOSTNAME}"]
+
+# --- Installed apps ---
 INSTALLED_APPS = [
     "django.contrib.admin",
     "django.contrib.auth",
@@ -17,8 +32,11 @@ INSTALLED_APPS = [
     "fpna_app",
 ]
 
+# --- Middleware (WhiteNoise directly after SecurityMiddleware in prod) ---
 MIDDLEWARE = [
     "django.middleware.security.SecurityMiddleware",
+    # WhiteNoise should be here in production for static files
+    "whitenoise.middleware.WhiteNoiseMiddleware",
     "django.contrib.sessions.middleware.SessionMiddleware",
     "django.middleware.common.CommonMiddleware",
     "django.middleware.csrf.CsrfViewMiddleware",
@@ -46,21 +64,18 @@ TEMPLATES = [
     },
 ]
 
+# Run ASGI (recommended for modern Django); WSGI remains for compatibility
+ASGI_APPLICATION = "project.asgi.application"
 WSGI_APPLICATION = "project.wsgi.application"
 
+# --- Database ---
+# Use DATABASE_URL when present (Render Postgres internal string, Neon, etc.).
+# Falls back to SQLite locally so you can run without any DB env var.
 DATABASES = {
-    "default": {
-        "ENGINE": "django.db.backends.postgresql",
-        "NAME": "neondb",
-        "USER": "neondb_owner",
-        "PASSWORD": "npg_qH2eP9gbSpdc",
-        "HOST": "ep-long-cherry-aej3a0w5-pooler.c-2.us-east-2.aws.neon.tech",
-        "PORT": "5432",
-        "OPTIONS": {
-            "sslmode": "require",
-            "channel_binding": "require",
-        },
-    }
+    "default": dj_database_url.config(
+        default=f"sqlite:///{BASE_DIR / 'db.sqlite3'}",
+        conn_max_age=600,  # keep-alive for pooled connections
+    )
 }
 
 AUTH_PASSWORD_VALIDATORS = []
@@ -70,6 +85,23 @@ TIME_ZONE = "UTC"
 USE_I18N = True
 USE_TZ = True
 
-STATIC_URL = "static/"
-STATICFILES_DIRS = [BASE_DIR / "fpna_app" / "static"]
+# --- Static files ---
+STATIC_URL = "/static/"
+
+# Required for collectstatic on Render
+STATIC_ROOT = BASE_DIR / "staticfiles"
+
+# Keep your app static folder for local dev too
+STATICFILES_DIRS = [
+    BASE_DIR / "fpna_app" / "static",
+]
+
+# Django 5.x storage settings (WhiteNoise)
+STORAGES = {
+    "default": {"BACKEND": "django.core.files.storage.FileSystemStorage"},
+    "staticfiles": {
+        "BACKEND": "whitenoise.storage.CompressedManifestStaticFilesStorage",
+    },
+}
+
 DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
